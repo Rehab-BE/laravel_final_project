@@ -95,11 +95,11 @@
                 CATEGORIES
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="{{route('categories.store')}}">Add category</a></li>
+                <li><a class="dropdown-item" href="{{route('categories.create')}}">Add category</a></li>
                 <li>
                   <hr class="dropdown-divider" />
                 </li>
-                <li><a class="dropdown-item" href="{{route('categories.create')}}">All categories</a></li>
+                <li><a class="dropdown-item" href="{{route('categories.store')}}">All categories</a></li>
               </ul>
             </li>
             <li class="nav-item dropdown">
