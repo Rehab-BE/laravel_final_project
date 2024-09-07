@@ -126,7 +126,7 @@
     <div class="mx-2">
       <h2 class="fw-bold fs-2 mb-5 pb-2">Add Topic</h2>
       <form action="{{route('topics.store')}}" method="post" class="px-md-5"  enctype="multipart/form-data">
-        @csrf
+      @csrf
         <div class="form-group mb-3 row">
           <label for="" class="form-label col-md-2 fw-bold text-md-end">Topic Title:</label>
           <div class="col-md-10">
@@ -142,14 +142,13 @@
             <select name="category_id" id="" class="form-control py-1" required>
               <option value="">Select category</option>
               @foreach ($categories as $category)
-              <option value="{{ $category->id }}"@selected(old('category_id') == $category->id)>
-                {{ $category->category_name }}</option>
+              <option value="{{ $category->id }}"  @selected(old('category_id') == $category->id)>
+                {{$category->category_name }}</option>
               @endforeach
             </select>
-
-              @error('category_name')
-                <div class="alert alert-danger">{{ $message }}</div>
-              @enderror
+            @error('category_id')
+              <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
           </div>
         </div>
         <div class="form-group mb-3 row">

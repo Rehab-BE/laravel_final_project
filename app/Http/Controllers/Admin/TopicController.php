@@ -43,7 +43,7 @@ class TopicController extends Controller
             'content' => 'required|string|max:500',
             'no_of_view' => 'required|numeric',
             'image' => 'nullable|mimes:png,jpg,jpeg,gif|max:2048',
-            'category_id' => 'required|exists:categories,id',
+            'category_id' => 'required|integer|exists:categories,id',
         ]);
         
         $data['image'] = $this->uploadFile( $request->image,'assests_admin/image/topic');

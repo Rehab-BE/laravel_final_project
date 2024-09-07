@@ -18,7 +18,7 @@ class TopicFactory extends Factory
     {
         return [
             'title'=> fake()->randomElement(['machine', 'codes', 'relatives']),
-            'category_name'=>fake()->randomElement(['Web development', 'Social Media']),
+            'category_name'=>fake()->company(),
             'content'  =>fake()->text(),
             'no_of_view' =>fake()->randomNumber(),
             'published' => fake()->numberBetween(0, 1),
