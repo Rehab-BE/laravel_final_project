@@ -3,23 +3,24 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use App\Models\Topic;
 use App\Models\Category;
 use App\Traits\Common;
-
+use Illuminate\Http\Request;
 
 class TopicController extends Controller
 {
+
     use Common;
+    
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
         $topics = Topic::get();
-        return view('admin.topics',compact('topics'));
+        $user = auth()->user();
+        return view('admin.topics', compact('topics','user'));
     }
 
     /**
@@ -27,9 +28,9 @@ class TopicController extends Controller
      */
     public function create()
     {
-        $categories = Category::select('id','category_name')->get();
-        
-        return view('admin.add_topic',compact('categories'));
+        $user = auth()->user();
+        $categories = Category::select('id', 'category_name')->get();
+        return view('admin.add_topic', compact('categories', 'user'));
     }
 
     /**
@@ -37,30 +38,33 @@ class TopicController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->all());
         $data = $request->validate([
             'title' => 'required|string',
-            'categor_name' => 'required|string',
-            'content' => 'required|string|max:500',
-            'no_of_view' => 'required|numeric',
-            'image' => 'nullable|mimes:png,jpg,jpeg,gif|max:2048',
-            'category_id' => 'required|integer|exists:categories,id',
+            'cate_name' => 'required|string',
+            'content' => 'required|string|max:100',
+            'trending' => 'boolean',
+            'published' => 'boolean',
+            'category_id' => 'required|exists:categories,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $this->uploadFile($request->image, 'assets_admin/test_image/topic');
+        }
         
-        $data['image'] = $this->uploadFile( $request->image,'assests_admin/image/topic');
-        $data['published'] = isset($request->published);
-        $data['trending'] = isset($request->trending);
-
         Topic::create($data);
-        return redirect()->route('topics.index')->with('topic','topic added successfully');
+        return redirect()->route('topics.index');
     }
-
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        //
+        $user = auth()->user();
+        $topic= Topic::with('category')->findOrFail($id);
+        return view('admin.topic_details', compact('topic','user'));
     }
 
     /**
@@ -68,7 +72,10 @@ class TopicController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $user = auth()->user();
+        $topic = Topic::findOrfail($id);
+        $categories = Category::select('id', 'category_name')->get();
+        return view('admin.edit_topic', compact('topic', 'categories','user'));
     }
 
     /**
@@ -76,7 +83,22 @@ class TopicController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        // dd($request->all());
+        $data = $request->validate([
+            'title' => 'required|string',
+            'cate_name' => 'required|string',
+            'content' => 'required|string|max:100',
+            'trending' => 'boolean',
+            'published' => 'boolean',
+            'category_id' => 'required|exists:categories,id',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $this->uploadFile($request->image, 'assets_admin/test_image/topic');
+        }
+        Topic::where('id', $id)->update($data);
+        return redirect()->route('topics.index');
     }
 
     /**
@@ -84,6 +106,7 @@ class TopicController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Topic::where('id', $id)->delete();
+        return redirect()->route('topics.index');
     }
 }

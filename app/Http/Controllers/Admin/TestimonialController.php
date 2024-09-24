@@ -1,18 +1,23 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Testimonial;
+use App\Traits\Common;
 use Illuminate\Http\Request;
 
 class TestimonialController extends Controller
 {
+    use Common;
     /**
      * Display a listing of the resource.
      */
-    public function testimonial()
+    public function index()
     {
-        return view('admin.testimonials');
+        $user = auth()->user();
+        $testimonials = Testimonial::get();
+        return view('admin.testimonials', compact('testimonials','user'));
     }
 
     /**
@@ -20,7 +25,8 @@ class TestimonialController extends Controller
      */
     public function create()
     {
-        //
+        $user = auth()->user();
+        return view('admin.add_testimonial', compact('user'));
     }
 
     /**
@@ -28,7 +34,18 @@ class TestimonialController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->validate([
+            'testimonial_name' => 'required|string',
+            'content' => 'required|string|max:500',
+            'published' => 'boolean',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $data['image'] = $this->uploadFile($request->image, 'assets_admin/test_image/testimonial');
+        }
+        Testimonial::create($data);
+        return redirect()->route('testimonials.index');
     }
 
     /**
@@ -44,7 +61,9 @@ class TestimonialController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $user = auth()->user();
+        $testimonials = Testimonial::findOrfail($id);
+        return view('admin.edit_testimonial', compact('testimonials','user'));
     }
 
     /**
@@ -52,7 +71,17 @@ class TestimonialController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $request->validate([
+            'testimonial_name' => 'required|string',
+            'content' => 'required|string|max:500',
+            'published' => 'boolean',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+        if ($request->hasFile('image')) {
+            $data['image'] = $this->uploadFile($request->image, 'assets_admin/test_image/testimonial');
+        }
+        Testimonial::where('id', $id)->update($data);
+        return redirect()->route('testimonials.index');
     }
 
     /**
@@ -60,6 +89,7 @@ class TestimonialController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Testimonial::where('id', $id)->delete();
+        return redirect()->route('testimonials.index');
     }
 }

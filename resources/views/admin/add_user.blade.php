@@ -9,9 +9,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="{{asset('assests_admin/css/dataTables.dataTables.min.css')}}">
-  <link rel="stylesheet" href="{{asset('assests_admin/css/main.min.css')}}">
-  <link rel="stylesheet" href="{{asset('assests_admin/css/styles.css')}}">
+  <link rel="stylesheet" href="{{asset('assets_admin/css/dataTables.dataTables.min.css')}}">
+  <link rel="stylesheet" href="{{asset('assets_admin/css/main.min.css')}}">
+  <link rel="stylesheet" href="{{asset('assets_admin/css/styles.css')}}">
 </head>
 
 <body>
@@ -33,14 +33,14 @@
             <ul class="navbar-nav">
               <li class="nav-item dropdown dropdown-center user-dropdown">
                 <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="true">
-                  <img class="img-xs rounded-circle" src="{{asset('assests_admin/images/avatar-default.svg')}}" alt="Profile image" />
+                  <img class="img-xs rounded-circle" src="{{asset('assets_admin/images/avatar-default.svg')}}" alt="Profile image" />
                 </a>
                 <div class="dropdown-menu dropdown-center navbar-dropdown" aria-labelledby="UserDropdown">
                   <div class="dropdown-header text-center">
-                    <img class="img-md rounded-circle" src="{{asset('assests_admin/images/avatar-default.svg')}}" alt="Profile image"
+                    <img class="img-md rounded-circle" src="{{asset('assets_admin/images/avatar-default.svg')}}" alt="Profile image"
                       width="80" height="80" />
-                    <p class="mb-1 mt-3 font-weight-semibold">Allen Moreno</p>
-                    <p class="fw-light text-muted mb-0">allenmoreno@gmail.com</p>
+                    <p class="mb-1 mt-3 font-weight-semibold">{{ ($user)->first_name }} {{($user)->last_name }}</p>
+                    <p class="fw-light text-muted mb-0">{{ ($user)->email }}</p>
                   </div>
                   <a class="dropdown-item">My Profile</a>
                   <a class="dropdown-item">Sign Out</a>
@@ -69,11 +69,11 @@
                 USERS
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="add_user.html">Add user</a></li>
+                <li><a class="dropdown-item" href="{{route('users.create')}}">Add user</a></li>
                 <li>
                   <hr class="dropdown-divider" />
                 </li>
-                <li><a class="dropdown-item" href="users.html">All users</a></li>
+                <li><a class="dropdown-item" href="{{route('users.index')}}">All users</a></li>
               </ul>
             </li>
             <li class="nav-item dropdown">
@@ -82,11 +82,11 @@
                 TOPICS
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="add_topic.html">Add topic</a></li>
+                <li><a class="dropdown-item" href="{{route('topics.create')}}">Add topic</a></li>
                 <li>
                   <hr class="dropdown-divider" />
                 </li>
-                <li><a class="dropdown-item" href="topics.html">All topics</a></li>
+                <li><a class="dropdown-item" href="{{route('topics.index')}}">All topics</a></li>
               </ul>
             </li>
             <li class="nav-item dropdown">
@@ -95,11 +95,11 @@
                 CATEGORIES
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="add_category.html">Add category</a></li>
+                <li><a class="dropdown-item" href="{{route('categories.store')}}">Add category</a></li>
                 <li>
                   <hr class="dropdown-divider" />
                 </li>
-                <li><a class="dropdown-item" href="categories.html">All categories</a></li>
+                <li><a class="dropdown-item" href="{{route('categories.index')}}">All categories</a></li>
               </ul>
             </li>
             <li class="nav-item dropdown">
@@ -108,70 +108,97 @@
                 TESTIMONIALS
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="add_testimonial.html">Add testimonial</a></li>
+                <li><a class="dropdown-item" href="{{route('testimonials.create')}}">Add testimonial</a></li>
                 <li>
                   <hr class="dropdown-divider" />
                 </li>
-                <li><a class="dropdown-item" href="testimonials.html">All testimonials</a></li>
+                <li><a class="dropdown-item" href="{{route('testimonials.index')}}">All testimonials</a></li>
               </ul>
             </li>
-            <li><a class="nav-item nav-link" href="messages.html">MESSAGES</a></li>
+            <li><a class="nav-item nav-link" href="{{route('messages.index')}}">MESSAGES</a></li>
           </ul>
         </div>
       </div>
     </nav>
   </header>
-  
+
   <div class="container my-5">
     <div class="mx-2">
       <h2 class="fw-bold fs-2 mb-5 pb-2">Add USER</h2>
-      <form action="" method="" class="px-md-5">
+      <form action="{{route('users.store')}}" method="post" class="px-md-5">
+        @csrf
         <div class="form-group mb-3 row">
           <label for="" class="form-label col-md-2 fw-bold text-md-end">Name:</label>
           <div class="col-md-5">
-            <input type="text" placeholder="First Name" class="form-control py-2" />
+            <input type="text" placeholder="First Name" class="form-control py-2" name="first_name" value="{{old('first_name')}}" />
+            @error('first_name')
+            <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
           </div>
           <div class="col-md-5">
-            <input type="text" placeholder="Last Name" class="form-control py-2" />
+            <input type="text" placeholder="Last Name" class="form-control py-2" name="last_name" value="{{old('last_name')}}" />
+            @error('last_name')
+            <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
           </div>
         </div>
         <div class="form-group mb-3 row">
           <label for="" class="form-label col-md-2 fw-bold text-md-end">UserName:</label>
           <div class="col-md-10">
-            <input type="text" placeholder="e.g. Jhon33" class="form-control py-2" />
+            <input type="text" placeholder="e.g. Jhon33" class="form-control py-2" name="user_name" value="{{old('user_name')}}" />
+            @error('user_name')
+            <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
           </div>
         </div>
         <div class="form-group mb-3 row">
           <label for="" class="form-label col-md-2 fw-bold text-md-end">Email:</label>
           <div class="col-md-10">
-            <input type="email" placeholder="e.g. Jhon@example.com" class="form-control py-2" />
+            <input type="email" placeholder="e.g. Jhon@example.com" class="form-control py-2" name="email" value="{{old('email')}}" />
+            @error('email')
+            <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
           </div>
         </div>
         <div class="form-group mb-3 row">
           <label for="" class="form-label col-md-2 fw-bold text-md-end">Password:</label>
           <div class="col-md-10">
-            <input type="password" placeholder="Password" class="form-control py-2" />
+            <input type="password" placeholder="Password" class="form-control py-2" name="password" value="{{old('password')}}" />
+            @error('password')
+            <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
           </div>
         </div>
         <div class="form-group mb-3 row">
           <label for="" class="form-label col-md-2 fw-bold text-md-end">Confirm Password:</label>
           <div class="col-md-10">
-            <input type="password" placeholder="Confirm Password" class="form-control py-2" />
+            <input type="password" placeholder="Confirm Password" class="form-control py-2" name="password_confirmation" value="{{old('password_confirmation')}}" />
+            @error('password-confirm')
+            <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
           </div>
         </div>
-        <div class="text-md-end">
-          <button class="btn mt-4 btn-secondary text-white fs-5 fw-bold border-0 py-2 px-md-5">
-            Add User
-          </button>
-        </div>
+        <div class="form-group mb-3 row">
+          <label for="" class="form-label col-md-2 fw-bold text-md-end">Phone:</label>
+          <div class="col-md-10">
+            <input type="text" placeholder="mobile" class="form-control py-2" name="mobile" value="{{old('mobile')}}" />
+            @error('mobile')
+            <div class="alert alert-danger">{{ $message }}</div>
+            @enderror
+          </div>
+          <div class="text-md-end">
+            <button class="btn mt-4 btn-secondary text-white fs-5 fw-bold border-0 py-2 px-md-5">
+              Add User
+            </button>
+          </div>
       </form>
     </div>
   </div>
   </main>
-  <script src="{{asset('assests_admin/js/jquery.min.js')}}"></script>
-  <script src="{{asset('assests_admin/js/bootstrap.bundle.min.js')}}"></script>
-  <script src="{{asset('assests_admin/js/dataTables.min.js')}}"></script>
-  <script src="{{asset('assests_admin/js/tables.js')}}"></script>
+  <script src="{{asset('assets_admin/js/jquery.min.js')}}"></script>
+  <script src="{{asset('assets_admin/js/bootstrap.bundle.min.js')}}"></script>
+  <script src="{{asset('assets_admin/js/dataTables.min.js')}}"></script>
+  <script src="{{asset('assets_admin/js/tables.js')}}"></script>
 </body>
 
 </html>

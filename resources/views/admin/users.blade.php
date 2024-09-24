@@ -9,9 +9,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="{{asset('assests_admin/css/dataTables.dataTables.min.css')}}">
-  <link rel="stylesheet" href="{{asset('assests_admin/css/main.min.css')}}">
-  <link rel="stylesheet" href="{{asset('assests_admin/css/styles.css')}}">
+  <link rel="stylesheet" href="{{asset('assets_admin/css/dataTables.dataTables.min.css')}}">
+  <link rel="stylesheet" href="{{asset('assets_admin/css/main.min.css')}}">
+  <link rel="stylesheet" href="{{asset('assets_admin/css/styles.css')}}">
 </head>
 
 <body>
@@ -33,11 +33,11 @@
             <ul class="navbar-nav">
               <li class="nav-item dropdown dropdown-center user-dropdown">
                 <a class="nav-link" id="UserDropdown" href="#" data-bs-toggle="dropdown" aria-expanded="true">
-                  <img class="img-xs rounded-circle" src="{{asset('assests_admin/images/avatar-default.svg')}}" alt="Profile image" />
+                  <img class="img-xs rounded-circle" src="{{asset('assets_admin/images/avatar-default.svg')}}" alt="Profile image" />
                 </a>
                 <div class="dropdown-menu dropdown-center navbar-dropdown" aria-labelledby="UserDropdown">
                   <div class="dropdown-header text-center">
-                    <img class="img-md rounded-circle" src="{{asset('assests_admin/images/avatar-default.svg')}}" alt="Profile image"
+                    <img class="img-md rounded-circle" src="{{asset('assets_admin/images/avatar-default.svg')}}" alt="Profile image"
                       width="80" height="80" />
                     <p class="mb-1 mt-3 font-weight-semibold">Allen Moreno</p>
                     <p class="fw-light text-muted mb-0">allenmoreno@gmail.com</p>
@@ -69,11 +69,11 @@
                 USERS
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="add_user.html">Add user</a></li>
+                <li><a class="dropdown-item" href="{{route('users.create')}}">Add user</a></li>
                 <li>
                   <hr class="dropdown-divider" />
                 </li>
-                <li><a class="dropdown-item" href="{{route('user')}}">All users</a></li>
+                <li><a class="dropdown-item" href="{{route('users.index')}}">All users</a></li>
               </ul>
             </li>
             <li class="nav-item dropdown">
@@ -82,11 +82,11 @@
                 TOPICS
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="add_topic.html">Add topic</a></li>
+                <li><a class="dropdown-item" href="{{route('topics.create')}}">Add topic</a></li>
                 <li>
                   <hr class="dropdown-divider" />
                 </li>
-                <li><a class="dropdown-item" href="{{route('topic')}}">All topics</a></li>
+                <li><a class="dropdown-item" href="{{route('topics.index')}}">All topics</a></li>
               </ul>
             </li>
             <li class="nav-item dropdown">
@@ -95,11 +95,11 @@
                 CATEGORIES
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="add_category.html">Add category</a></li>
+                <li><a class="dropdown-item" href="{{route('categories.store')}}">Add category</a></li>
                 <li>
                   <hr class="dropdown-divider" />
                 </li>
-                <li><a class="dropdown-item" href="{{route('category')}}">All categories</a></li>
+                <li><a class="dropdown-item" href="{{route('categories.index')}}">All categories</a></li>
               </ul>
             </li>
             <li class="nav-item dropdown">
@@ -108,14 +108,14 @@
                 TESTIMONIALS
               </a>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="add_testimonial.html">Add testimonial</a></li>
+                <li><a class="dropdown-item" href="{{route('testimonials.create')}}">Add testimonial</a></li>
                 <li>
                   <hr class="dropdown-divider" />
                 </li>
-                <li><a class="dropdown-item" href="{{route('testimonial')}}">All testimonials</a></li>
+                <li><a class="dropdown-item" href="{{route('testimonials.index')}}">All testimonials</a></li>
               </ul>
             </li>
-            <li><a class="nav-item nav-link" href="{{route('message')}}">MESSAGES</a></li>
+            <li><a class="nav-item nav-link" href="{{route('messages.index')}}">MESSAGES</a></li>
           </ul>
         </div>
       </div>
@@ -125,7 +125,7 @@
         <div class="mx-2">
             <div class="row justify-content-between mb-2 pb-2">
                 <h2 class="fw-bold fs-2 col-auto">All Users</h2>
-                <a href="add_user.html" class="btn btn-link  link-dark fw-semibold col-auto me-3">➕Add new user</a>
+                <a href="{{route('users.create')}}" class="btn btn-link  link-dark fw-semibold col-auto me-3">➕Add new user</a>
             </div>
             <div class="table-responsive">
                 <table class="table table-hover display" id="_table">
@@ -141,114 +141,26 @@
                         </tr>
                     </thead>
                     <tbody>
+                      @foreach($users as $user)
                         <tr>
-                            <th scope="row">18 Jul 2024</th>
-                            <td>Mark Henry</td>
-                            <td>Mark33</td>
-                            <td>mark@example.com</td>
-                            <td>+201123474</td>
-                            <td>YES</td>
-                            <td class="text-center"><a class="text-decoration-none text-dark" href="edit_user.html"><img src="{{asset('assests_admin/images/edit-svgrepo-com.svg')}}"></a></td>
+                            <th scope="row">{{\Carbon\Carbon::parse($user['created_at'])->format('d M Y')}}</th>
+                            <td>{{$user['first_name']}} {{$user['last_name']}}</td>
+                            <td>{{$user['user_name']}}</td>
+                            <td>{{$user['email']}}</td>
+                            <td>{{$user['mobile']}}</td>
+                            <td>{{$user['active']=="1" ? "Yes" : "No"}}</td>
+                            <td class="text-center"><a class="text-decoration-none text-dark" href="{{route('users.edit',$user->id)}}"><img src="{{asset('assets_admin/images/edit-svgrepo-com.svg')}}"></a></td>
                         </tr>
-                        <tr>
-                            <th scope="row">18 Jul 2024</th>
-                            <td>Mark Henry</td>
-                            <td>Mark33</td>
-                            <td>mark@example.com</td>
-                            <td>_</td>
-                            <td>YES</td>
-                            <td class="text-center"><a class="text-decoration-none text-dark" href="edit_user.html"><img src="{{asset('assests_admin/images/edit-svgrepo-com.svg')}}"></a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">28 Jul 2024</th>
-                            <td>Mark Henry</td>
-                            <td>Mark28</td>
-                            <td>mark@example.com</td>
-                            <td>+201123474</td>
-                            <td>No</td>
-                            <td class="text-center"><a class="text-decoration-none text-dark" href="edit_user.html"><img src="{{asset('assests_admin/images/edit-svgrepo-com.svg')}}"></a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">18 Jul 2024</th>
-                            <td>Mark Henry</td>
-                            <td>Mark33</td>
-                            <td>mark@example.com</td>
-                            <td>+201123474</td>
-                            <td>No</td>
-                            <td class="text-center"><a class="text-decoration-none text-dark" href="edit_user.html"><img src="{{asset('assests_admin/images/edit-svgrepo-com.svg')}}"></a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">18 Jul 2024</th>
-                            <td>Mark Henry</td>
-                            <td>Mark33</td>
-                            <td>mark@example.com</td>
-                            <td>+201123474</td>
-                            <td>No</td>
-                            <td class="text-center"><a class="text-decoration-none text-dark" href="edit_user.html"><img src="{{asset('assests_admin/images/edit-svgrepo-com.svg')}}"></a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">22 Jul 2024</th>
-                            <td>Mark Henry</td>
-                            <td>Mark22</td>
-                            <td>mark@example.com</td>
-                            <td>+201123474</td>
-                            <td>No</td>
-                            <td class="text-center"><a class="text-decoration-none text-dark" href="edit_user.html"><img src="{{asset('assests_admin/images/edit-svgrepo-com.svg')}}"></a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">18 Jul 2024</th>
-                            <td>Mark Henry</td>
-                            <td>Mark33</td>
-                            <td>mark@example.com</td>
-                            <td>+201123474</td>
-                            <td>No</td>
-                            <td class="text-center"><a class="text-decoration-none text-dark" href="edit_user.html"><img src="{{asset('assests_admin/images/edit-svgrepo-com.svg')}}"></a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">18 Jul 2024</th>
-                            <td>Mark Henry</td>
-                            <td>Mark33</td>
-                            <td>mark@example.com</td>
-                            <td>+201123474</td>
-                            <td>No</td>
-                            <td class="text-center"><a class="text-decoration-none text-dark" href="edit_user.html"><img src="{{asset('assests_admin/images/edit-svgrepo-com.svg')}}"></a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">18 Jul 2024</th>
-                            <td>Mark Henry</td>
-                            <td>Mark33</td>
-                            <td>mark@example.com</td>
-                            <td>+201123474</td>
-                            <td>No</td>
-                            <td class="text-center"><a class="text-decoration-none text-dark" href="edit_user.html"><img src="{{asset('assests_admin/images/edit-svgrepo-com.svg')}}"></a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">18 Jul 2024</th>
-                            <td>Mark Henry</td>
-                            <td>Mark33</td>
-                            <td>mark@example.com</td>
-                            <td>_</td>
-                            <td>No</td>
-                            <td class="text-center"><a class="text-decoration-none text-dark" href="edit_user.html"><img src="{{asset('assests_admin/images/edit-svgrepo-com.svg')}}"></a></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">18 Jul 2024</th>
-                            <td>Mark Henry</td>
-                            <td>Mark33</td>
-                            <td>mark@example.com</td>
-                            <td>_</td>
-                            <td>YES</td>
-                            <td class="text-center"><a class="text-decoration-none text-dark" href="edit_user.html"><img src="{{asset('assests_admin/images/edit-svgrepo-com.svg')}}"></a></td>
-                        </tr>
+                      @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-  <script src="{{asset('assests_admin/js/jquery.min.js')}}"></script>
-  <script src="{{asset('assests_admin/js/bootstrap.bundle.min.js')}}"></script>
-  <script src="{{asset('assests_admin/js/dataTables.min.js')}}"></script>
-  <script src="{{asset('assests_admin/js/tables.js')}}"></script>
+  <script src="{{asset('assets_admin/js/jquery.min.js')}}"></script>
+  <script src="{{asset('assets_admin/js/bootstrap.bundle.min.js')}}"></script>
+  <script src="{{asset('assets_admin/js/dataTables.min.js')}}"></script>
+  <script src="{{asset('assets_admin/js/tables.js')}}"></script>
 </body>
 
 </html>

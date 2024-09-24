@@ -4,8 +4,8 @@ namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Topic;
 use App\Models\Category;
+use App\Models\Topic;
 use App\Traits\Common;
 
 class CategoryController extends Controller
@@ -16,8 +16,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
+        $user = auth()->user();
         $categories = Category::get();
-        return view('admin.categories', compact('categories'));
+        return view('admin.categories', compact('categories','user'));
     }
 
     /**
@@ -25,8 +26,9 @@ class CategoryController extends Controller
      */
     public function create()
     {
+        $user = auth()->user();
         $categories = Category::get();
-        return view('admin.add_category', compact('categories'));
+        return view('admin.add_category', compact('categories','user'));
     }
 
     /**
@@ -39,7 +41,7 @@ class CategoryController extends Controller
         ]);
 
         Category::create($data);
-        return redirect()->route('categories.index')->with('category','category added successfully');
+        return redirect()->route('categories.index');
     }
 
     /**
@@ -55,7 +57,9 @@ class CategoryController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $user = auth()->user();
+        $categories = Category::findOrfail($id);
+        return  view('admin.edit_category', compact('categories','user'));
     }
 
     /**
@@ -63,7 +67,12 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $data = $request->validate([
+            'category_name' => 'required|string',
+        ]);
+
+        Category::where('id', $id)->update($data);
+        return redirect()->route('categories.index');
     }
 
     /**
@@ -71,6 +80,9 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        // Category::find($id)->topics()->delete();
+        // Category::destroy($id);
+        Category::where('id', $id)->delete();
+        return redirect()->route('categories.index');
     }
 }

@@ -17,13 +17,14 @@ class TopicFactory extends Factory
     public function definition(): array
     {
         return [
-            'title'=> fake()->randomElement(['machine', 'codes', 'relatives']),
-            'category_name'=>fake()->company(),
-            'content'  =>fake()->text(),
-            'no_of_view' =>fake()->randomNumber(),
-            'published' => fake()->numberBetween(0, 1),
-            'trending' =>fake()->boolean() ,
-            'image' =>basename(fake()->image(public_path('assests_admin/image/topic'))) ,
+            'title' => fake()->word(),
+            'cate_name'=>fake()->word(),
+            'content'=>fake()->text(),
+            'no_of_view'=>fake()->randomNumber(),
+            'published' => fake()->boolean(),
+            'trending' => fake()->boolean(),
+            'image' => basename(fake()->image(public_path('assets_admin/test_image/topic'))),
+            'category_id' => fake()->numberBetween(1, 5),
         ];
     }
 }
